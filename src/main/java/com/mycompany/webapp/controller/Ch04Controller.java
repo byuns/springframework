@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mycompany.webapp.dto.Ch04Dto;
 import com.mycompany.webapp.dto.Ch04Member;
-import com.mycompany.webapp.validator.Ch04MemberJoinFormValidator;
+import com.mycompany.webapp.validator.Ch04MemberEmailValidator;
+import com.mycompany.webapp.validator.Ch04MemberIdValidator;
 import com.mycompany.webapp.validator.Ch04MemberLoginFormValidator;
+import com.mycompany.webapp.validator.Ch04MemberPasswordValidator;
+import com.mycompany.webapp.validator.Ch04MemberTelValidator;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -35,7 +38,13 @@ public class Ch04Controller {
 	//DTO와 유효성 검사기를 연결
 	@InitBinder("joinForm")
 	public void bindCh04MemberJoinFormValidator(WebDataBinder binder) {
-		binder.setValidator(new Ch04MemberJoinFormValidator());
+		//binder.setValidator(new Ch04MemberJoinFormValidator());
+		binder.addValidators(
+			new Ch04MemberIdValidator(),
+		    new Ch04MemberPasswordValidator(),
+		    new Ch04MemberEmailValidator(),
+		    new Ch04MemberTelValidator()
+		);
 	}
 	
 	
@@ -56,7 +65,11 @@ public class Ch04Controller {
 	
 	@InitBinder("loginForm")
 	public void bindCh04MemberLoginFormValidator(WebDataBinder binder) {
-		binder.setValidator(new Ch04MemberLoginFormValidator());
+		//binder.setValidator(new Ch04MemberLoginFormValidator());
+		binder.addValidators(
+			new Ch04MemberIdValidator(),
+			new Ch04MemberPasswordValidator()
+		);
 	}
 	
 	@PostMapping("/login")
