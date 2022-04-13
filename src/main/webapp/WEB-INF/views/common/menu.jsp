@@ -30,7 +30,14 @@
 	<li class="nav-item mb-2">
 		<h6 class="text-white">
 			<span class="m-2">Ch05.</span> <a href="${pageContext.request.contextPath}/ch05/content" class="text-white">
-				Controller/Header&Cookie
+				Controller/Header & Cookie
+			</a>
+		</h6>
+	</li>
+	<li class="nav-item mb-2">
+		<h6 class="text-white">
+			<span class="m-2">Ch06.</span> <a href="${pageContext.request.contextPath}/ch06/content" class="text-white">
+				Controller/Forward & Redirect
 			</a>
 		</h6>
 	</li>
