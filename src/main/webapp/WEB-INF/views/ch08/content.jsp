@@ -88,7 +88,7 @@
 						let mpassword = $("#mpassword").val();
 						$.ajax({
 							url: "loginAjax",
-							data: {mid, mpassword},
+							data: {mid,mpassword},
 							method: "post"
 						}).done((data) => {
 							//data = {result:"success"}

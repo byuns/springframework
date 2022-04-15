@@ -36,7 +36,6 @@ public class Ch07Controller {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String strDate = sdf.format(date);
-		
 		request.setAttribute("strDate", strDate);
 		
 		return "ch07/content";
@@ -121,17 +120,29 @@ public class Ch07Controller {
 		return "ch07/boardDetail";
 	}
 	@GetMapping("/modelAttribute")
-	public String modelAttribute(@ModelAttribute("kind") String kind,@ModelAttribute("sex") String sex) {
-		return "ch07/clothInfo";
-	}
-	
-	@GetMapping("/commandObject")
-	public String commandObject(Ch07Cloth cloth) {
+	public String modelAttribute(@ModelAttribute("kind") String kind,
+			@ModelAttribute("sex") String sex) {
 		return "ch07/clothInfo";
 	}
 	
 //	@GetMapping("/commandObject")
-//	public String commandObject(@ModelAttribute("cloth") Ch07Cloth cloth) {
+//	public String commandObject(Ch07Cloth cloth) {
 //		return "ch07/clothInfo";
 //	}
+	
+	@GetMapping("/commandObject")
+	public String commandObject(@ModelAttribute("cloth") Ch07Cloth cloth) {
+		return "ch07/clothInfo";
+	}
+	//요청 매핑 메소드가 실행할 때마다 먼저 실행
+	@ModelAttribute("commonData")
+	public Ch07Board getCommonData() {
+		log.info("실행");
+		Ch07Board board= new Ch07Board(2,"제목2","내용2","글쓴이2",new Date());
+		return board;
+	}
 }
+
+
+
+
