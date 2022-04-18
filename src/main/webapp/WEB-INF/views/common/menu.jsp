@@ -62,4 +62,12 @@
 			</a>
 		</h6>
 	</li>
+	</li>
+		<li class="nav-item mb-2">
+		<h6 class="text-white">
+			<span class="m-2">Ch10.</span> <a href="${pageContext.request.contextPath}/ch10/content" class="text-white">
+				Controller/Exception Handling
+			</a>
+		</h6>
+	</li>
 </ul>
