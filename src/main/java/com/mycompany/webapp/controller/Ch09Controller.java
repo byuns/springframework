@@ -1,12 +1,18 @@
 package com.mycompany.webapp.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Date;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,5 +76,35 @@ public class Ch09Controller {
 		String json = jsonObject.toString();
 		
 		return json;
+	}
+	
+	@RequestMapping("/filedownload")
+	public void filedownload(int fileNo, HttpServletResponse response, @RequestHeader("User-Agent") String userAgent) throws Exception{
+		//DB에서 가져올 정보
+		String contentType = "image/jpeg";
+		String originalFilename = "이미지1.jpg";
+		String saveFilename = "1650007880751-photo3.jpg";
+		
+		//응답 내용의 데이터 타입을 응답 헤더에 추가
+		response.setContentType(contentType);
+		//response.setHeader("Content-Type", contentType);
+		
+		
+		//다운로드할 파일명을 헤더에 추가
+		if(userAgent.contains("Trident") || userAgent.contains("MSIE"))  {
+			//IE 브라우저일 경우
+			originalFilename = URLEncoder.encode(originalFilename,"UTF-8");
+		}else {
+			//크롬,엣지,사파리일 경우
+			originalFilename = new String(originalFilename.getBytes("UTF-8"),"ISO-8859-1");
+		}
+		
+		response.setHeader("Content-Disposition", "attachment; filename=\""+originalFilename + "\"");
+		
+		//파일 데이터를 응답 본문에 싣기
+		File file = new File("C:/Temp/uploadfiles/"+saveFilename);
+		if(file.exists()) {
+			FileCopyUtils.copy(new FileInputStream(file), response.getOutputStream());
+		}
 	}
 }
