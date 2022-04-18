@@ -2,11 +2,9 @@ package com.mycompany.webapp.view;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.Map;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,21 +42,22 @@ public class Ch12FileDownloadView extends AbstractView{
 			//크롬,엣지,사파리일 경우
 			originalFilename = new String(originalFilename.getBytes("UTF-8"),"ISO-8859-1");
 		}
-		
+		log.info("실행2");
 		response.setHeader("Content-Disposition", "attachment; filename=\""+originalFilename + "\"");
 				
 		//파일 데이터를 응답 본문에 싣기
 		File file = new File("C:/Temp/uploadfiles/"+saveFilename);
+
 		if(file.exists()) {
+			/*
 			InputStream is = new FileInputStream(file);
 			ServletOutputStream os =response.getOutputStream();
 			FileCopyUtils.copy(is, os);
 			os.flush();
 			os.close();
-			is.close();
-			//FileCopyUtils.copy(new FileInputStream(file), response.getOutputStream());
+			is.close();*/
+			FileCopyUtils.copy(new FileInputStream(file), response.getOutputStream());
 		}
-		
 	}
 
 }
