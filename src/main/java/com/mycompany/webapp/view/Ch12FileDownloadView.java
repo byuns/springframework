@@ -35,13 +35,13 @@ public class Ch12FileDownloadView extends AbstractView{
 				
 				
 		//다운로드할 파일명을 헤더에 추가
-		if(userAgent.contains("Trident") || userAgent.contains("MSIE"))  {
+		/*if(userAgent.contains("Trident") || userAgent.contains("MSIE"))  {
 			//IE 브라우저일 경우
 			originalFilename = URLEncoder.encode(originalFilename,"UTF-8");
 		}else {
 			//크롬,엣지,사파리일 경우
 			originalFilename = new String(originalFilename.getBytes("UTF-8"),"ISO-8859-1");
-		}
+		}*/
 		log.info("실행2");
 		response.setHeader("Content-Disposition", "attachment; filename=\""+originalFilename + "\"");
 				
