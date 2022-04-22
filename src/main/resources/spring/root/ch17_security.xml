@@ -11,18 +11,31 @@
 	<!-- 보안 필터 체인 설정 -->
 	<security:http>
 		<!-- Form 인증 방식 -->
-		<security:form-login
+		<!-- <security:form-login
 			login-page="/ch17/loginForm"
 			username-parameter="mid"
 			password-parameter="mpassword"
 			login-processing-url="/login"
 			always-use-default-target="false"
 			default-target-url="/ch17/content"
-			authentication-failure-url="/ch17/loginForm"/>
+			authentication-failure-url="/ch17/loginForm"/> -->
+			
+			 <security:form-login
+			login-page="/ch17/loginForm"
+			username-parameter="mid"
+			password-parameter="mpassword"
+			login-processing-url="/login"
+			authentication-success-handler-ref="authenticationSuccessHandler"
+         	authentication-failure-handler-ref="authenticationFailureHandler"/>
+			
 		
-		<security:logout
+		<!-- <security:logout
 			logout-url="/logout"
-			logout-success-url="/ch17/content"/>
+			logout-success-url="/ch17/content"/> -->
+			
+			<security:logout
+			logout-url="/logout"
+			success-handler-ref="logoutSuccessHandler"/>
 		
 		<!-- 사이트 간 요청 위조 방지 비활성화 -->
 		<security:csrf disabled="true"/>
@@ -35,6 +48,26 @@
 		
 		<!-- 권한 없을 경우 보여줄 페이지 설정 -->
 		<security:access-denied-handler error-page="/ch17/error403"/>
+		
+		<!-- 로그인 중복 방지를 위한 설정 -->
+      	<security:session-management>
+         <!-- 
+         max-sessions: 최대 로그인 수
+         error-if-maximum-exceeded="true": 다른 곳에서 로그인을 할 수 없음
+         expired-url: 인증이 무료화된 사용자가 이동하는 페이지
+         -->
+         
+         <!-- 이전 로그인을 유효하게 만들기 -->
+         
+         <!-- <security:concurrency-control max-sessions="1"
+                                error-if-maximum-exceeded="true"/> -->
+        
+         
+         <!-- 최종 로그인을 유효하게 만들기 -->
+         <security:concurrency-control max-sessions="1"
+                                error-if-maximum-exceeded="false"
+                                expired-url="/ch17/loginForm"/>
+      	 </security:session-management>
 
 	</security:http>
 	
@@ -44,17 +77,37 @@
 	   </security:authentication-manager>
 	    
 	    <!-- 인증 제공자 설정 및 사용자 정보 가져오기 -->
+	    <!--  
 	   <bean id="daoAuthenticationProvider"
-	        class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+	       class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
 	      <property name="userDetailsService" ref="jdbcUserService"/>
 	      <property name="authoritiesMapper" ref="roleHierarchyAuthoritiesMapper"/>
 	   </bean>
+	   -->
 	   
-	   <security:jdbc-user-service 
+	   <!-- 
+	    <bean id="daoAuthenticationProvider"
+	        class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+	      <property name="userDetailsService" ref="jdbcUserService"/>
+	      <property name="authoritiesMapper" ref="roleHierarchyAuthoritiesMapper"/>
+	       <property name="passwordEncoder" ref="bcryptPasswordEncoder"/> 
+	   </bean>
+	   -->
+	   
+	   <!-- 
+	   	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BcryptPasswordEncoder"/>
+	    -->
+	   <!--<security:jdbc-user-service 
 	      id="jdbcUserService"
 	      data-source-ref="dataSource"
 	      users-by-username-query="SELECT mid, mpassword, menabled FROM member WHERE mid=?"
-	      authorities-by-username-query="SELECT mid, mrole FROM member WHERE mid=?"/>
+	      authorities-by-username-query="SELECT mid, mrole FROM member WHERE mid=?"/>-->
+	      
+	    <bean id="daoAuthenticationProvider"
+        	class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+      		<property name="userDetailsService" ref="ch17UserDetailsService"/>
+      		<property name="authoritiesMapper" ref="roleHierarchyAuthoritiesMapper"/>
+   		</bean>  
 	      
 	   <!-- 권한 계층 설정 -->
 	   <bean id="roleHierarchyAuthoritiesMapper"
@@ -70,5 +123,17 @@
 	         </value>
 	      </property>
 	   </bean>   
+	   
+	   <bean id="authenticationSuccessHandler" class="com.mycompany.webapp.security.Ch17AuthenticationSuccessHandler">
+	   	<property name="alwaysUseDefaultTargetUrl" value="false"></property>	
+	   	<property name="defaultTargetUrl" value="/ch17/content"></property>
+	   </bean>
 	
+		<bean id="authenticationFailureHandler" class="com.mycompany.webapp.security.Ch17AuthenticationFailureHandler">
+	   	<property name="defaultFailureUrl" value="/ch17/loginForm"></property>
+	   </bean>
+	   
+	   <bean id="logoutSuccessHandler" class="com.mycompany.webapp.security.Ch17LogoutSuccessHandler">
+	   	<property name="defaultTargetUrl" value="/ch17/content"></property>
+	   </bean>
 </beans>

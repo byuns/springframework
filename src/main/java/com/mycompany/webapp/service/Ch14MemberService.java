@@ -48,4 +48,8 @@ public class Ch14MemberService {
 			}
 		}
 	}
+	
+	public Ch14Member getMember(String mid) {
+		return memberDao.selectByMid(mid);
+	}
 }
